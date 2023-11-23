@@ -48,19 +48,20 @@ public class Quote {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Quote quote)) return false;
-        return Objects.equals(getAuthor(), quote.getAuthor()) && Objects.equals(getText(), quote.getText());
+        return getId() == quote.getId() && Objects.equals(getAuthor(), quote.getAuthor()) && Objects.equals(getText(), quote.getText());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getAuthor(), getText());
+        return Objects.hash(getId(), getAuthor(), getText());
     }
 
     @Override
     public String toString() {
-        return "quote{" +
-                "'" + text + '\'' +
-                ", by'" + author + '\'' +
+        return "Quote{" +
+                "id=" + id +
+                ", author='" + author + '\'' +
+                ", text='" + text + '\'' +
                 '}';
     }
 }

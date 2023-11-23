@@ -34,6 +34,18 @@ public class QuoteController {
         return service.findAll(new PaginationDTO(page, pageSize));
     }
 
+    //GET http://localhost:8080/quotes/search?text=`eat,`&page=0&pageSize=10
+    @GetMapping(value = "/search", params = {"page", "pageSize"})
+    public List<QuoteDTO> findAllByTextLike(@RequestParam("text") String text, @RequestParam int page, @RequestParam int pageSize) {
+        return service.findAllByTextLike(text, new PaginationDTO(page, pageSize));
+    }
+
+    // GET http://localhost:8080/quotes/random
+    @GetMapping("/random")
+    public QuoteDTO getRandomQuote() {
+        return service.getRandomQuote();
+    }
+
     // GET http://localhost:8080/quotes/1111
     @GetMapping("/{id}")
     public QuoteDTO findById(@PathVariable long id) {
@@ -47,16 +59,16 @@ public class QuoteController {
         return service.create(quoteDTO);
     }
 
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    // PUT http://localhost:8080/quotes/3
     @PutMapping("/{id}")
     public QuoteDTO update(@PathVariable long id, @RequestBody QuoteDTO quoteDTO) {
         return service.update(id, quoteDTO);
     }
 
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
-//    @DeleteMapping("/{id}")
-//    public void delete(@RequestBody Quote quote) {
-//        repository.delete(quote.getId());
-//    }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable long id) {
+        service.delete(id);
+    }
 
 }

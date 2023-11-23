@@ -21,7 +21,9 @@ public interface QuoteRepository extends CrudRepository<Quote, Long> {
     Get quotes that contain specific text (e.g. "discover").
     */
     @Query("""
-        select quote from Quote quote where quote.text like %:text% order by quote.author
+        SELECT quote FROM Quote quote
+        WHERE quote.text LIKE :text
+        ORDER BY quote.author
     """)
     List<Quote> findAllByTextLikeOrderByAuthor(@Param("text") String text, Pageable pageable);
 
@@ -29,6 +31,19 @@ public interface QuoteRepository extends CrudRepository<Quote, Long> {
         select quote from Quote quote order by quote.author
     """)
     List<Quote> findAllByOrderByAuthor(Pageable pageable);
+
+    @Query("""
+        SELECT q FROM Quote q
+        WHERE q.id = :id
+    """)
+    Quote findById(@Param("id") long id);
+
+
+    @Query("""
+        DELETE FROM Quote q
+        WHERE q.id = :id
+    """)
+    void deleteQuoteById(@Param("id") long id);
 
     Quote save(@Validated Quote entity);
 
