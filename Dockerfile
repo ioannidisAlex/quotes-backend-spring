@@ -2,8 +2,7 @@ FROM amazoncorretto:11
 
 WORKDIR /application
 
-COPY * .
+COPY . .
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "quote.jar"]
