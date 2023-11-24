@@ -28,6 +28,10 @@ public class Quote {
         return id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public String getAuthor() {
         return author;
     }
@@ -41,6 +45,9 @@ public class Quote {
     }
 
     public void setText(String text) {
+        if (text == null) {
+            throw new IllegalArgumentException("Text cannot be null");
+        }
         this.text = text;
     }
 
