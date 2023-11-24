@@ -10,16 +10,8 @@ import org.springframework.validation.annotation.Validated;
 import java.util.List;
 
 @Repository
-public interface QuoteRepository extends CrudRepository<Quote, Long> {
-    /*
-    Create a quote.
-    Update a quote with a specific ID.
-    Get a quote with a specific ID.
-    Delete a quote with a specific ID.
-    Get a random quote.
-    Get all quotes.
-    Get quotes that contain specific text (e.g. "discover").
-    */
+public interface QuoteRepository extends CrudRepository<Quote, Long>  {
+
     @Query("""
         SELECT quote FROM Quote quote
         WHERE quote.text LIKE :text
@@ -37,13 +29,6 @@ public interface QuoteRepository extends CrudRepository<Quote, Long> {
         WHERE q.id = :id
     """)
     Quote findById(@Param("id") long id);
-
-
-    @Query("""
-        DELETE FROM Quote q
-        WHERE q.id = :id
-    """)
-    void deleteQuoteById(@Param("id") long id);
 
     Quote save(@Validated Quote entity);
 

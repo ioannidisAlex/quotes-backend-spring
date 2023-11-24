@@ -46,7 +46,7 @@ public class QuoteService {
     }
 
     public void delete(long id) {
-        repository.deleteQuoteById(id);
+        repository.deleteById(id);
     }
 
     public QuoteDTO update(long id, QuoteDTO quoteDTO) {
