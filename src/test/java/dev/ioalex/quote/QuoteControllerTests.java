@@ -6,7 +6,6 @@ import dev.ioalex.quote.dto.QuoteDTO;
 import dev.ioalex.quote.exception.QuoteServiceException;
 import dev.ioalex.quote.service.QuoteService;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
