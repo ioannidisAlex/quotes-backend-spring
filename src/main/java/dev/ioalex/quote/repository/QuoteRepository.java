@@ -1,6 +1,7 @@
 package dev.ioalex.quote.repository;
 
 import dev.ioalex.quote.entity.Quote;
+import dev.ioalex.quote.exception.QuoteNotFoundException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -22,7 +23,7 @@ public interface QuoteRepository extends CrudRepository<Quote, Long>  {
     @Query("""
         select quote from Quote quote order by quote.author
     """)
-    List<Quote> findAllByOrderByAuthor(Pageable pageable);
+    List<Quote> findAllByOrderByAuthor(Pageable pageable) throws QuoteNotFoundException;
 
     @Query("""
         SELECT q FROM Quote q

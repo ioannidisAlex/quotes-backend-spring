@@ -3,9 +3,10 @@ package dev.ioalex.quote.service;
 import dev.ioalex.quote.dto.PaginationDTO;
 import dev.ioalex.quote.dto.QuoteDTO;
 import dev.ioalex.quote.entity.Quote;
+import dev.ioalex.quote.exception.QuoteNotFoundException;
+import dev.ioalex.quote.exception.QuoteServiceException;
 import dev.ioalex.quote.repository.QuoteRepository;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,9 +23,13 @@ public class QuoteService {
     }
 
     public List<QuoteDTO> findAll(PaginationDTO paginationDTO) {
-        return repository.findAllByOrderByAuthor(PageRequest.of(paginationDTO.getPage(), paginationDTO.getPageSize()))
-                .stream().map(entity -> new QuoteDTO(entity.getId(), entity.getAuthor(), entity.getText()))
-                .collect(Collectors.toList());
+        try {
+            return repository.findAllByOrderByAuthor(PageRequest.of(paginationDTO.getPage(), paginationDTO.getPageSize()))
+                    .stream().map(entity -> new QuoteDTO(entity.getId(), entity.getAuthor(), entity.getText()))
+                    .collect(Collectors.toList());
+        } catch (QuoteNotFoundException e) {
+            throw new QuoteServiceException("An error occurred in QuoteService", e);
+        }
     }
 
     public QuoteDTO getRandomQuote() {
@@ -54,15 +59,19 @@ public class QuoteService {
         return updateEntity(quote, quoteDTO);
     }
 
+    //to bechecked
     public QuoteDTO create(QuoteDTO quoteDTO) {
         return updateEntity(new Quote(), quoteDTO);
     }
 
+    //to bechecked
     private QuoteDTO updateEntity(Quote quote, QuoteDTO quoteDTO) {
         quote.setText(quoteDTO.getText());
         quote.setAuthor(quoteDTO.getAuthor());
         quote = repository.save(quote);
+        // icould/should recreate the quoteDTO and return it right?
         quoteDTO.setId(quote.getId());
+        //
         return quoteDTO;
     }
 

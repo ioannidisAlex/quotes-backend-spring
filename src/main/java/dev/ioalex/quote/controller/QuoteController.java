@@ -3,20 +3,14 @@ package dev.ioalex.quote.controller;
 
 import dev.ioalex.quote.dto.PaginationDTO;
 import dev.ioalex.quote.dto.QuoteDTO;
-import dev.ioalex.quote.repository.QuoteRepository;
+import dev.ioalex.quote.exception.QuoteServiceException;
 import dev.ioalex.quote.service.QuoteService;
-import jakarta.validation.ConstraintViolation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.Validator;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import dev.ioalex.quote.entity.Quote;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/quotes")
@@ -30,8 +24,13 @@ public class QuoteController {
 
     // GET http://localhost:8080/quotes?page=2&pageSize=10
     @GetMapping
-    public List<QuoteDTO> findAll(@RequestParam int page, @RequestParam int pageSize) {
-        return service.findAll(new PaginationDTO(page, pageSize));
+    public ResponseEntity<List<QuoteDTO>> findAll(@RequestParam int page, @RequestParam int pageSize) {
+        try {
+            List<QuoteDTO> quotes = service.findAll(new PaginationDTO(page, pageSize));
+            return ResponseEntity.ok(quotes);
+        } catch (QuoteServiceException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList());
+        }
     }
 
     //GET http://localhost:8080/quotes/search?text=`eat,`&page=0&pageSize=10
@@ -60,6 +59,7 @@ public class QuoteController {
     }
 
     // PUT http://localhost:8080/quotes/3
+    @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{id}")
     public QuoteDTO update(@PathVariable long id, @RequestBody QuoteDTO quoteDTO) {
         return service.update(id, quoteDTO);
