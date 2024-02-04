@@ -1,8 +1,14 @@
 package dev.ioalex.quote.dto;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Positive;
+
 public class PaginationDTO {
 
+    @Min(0)
     private int page;
+
+    @Positive
     private int pageSize;
 
     public PaginationDTO(int page, int pageSize) {

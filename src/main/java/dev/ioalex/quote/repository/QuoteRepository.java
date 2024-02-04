@@ -25,12 +25,4 @@ public interface QuoteRepository extends CrudRepository<Quote, Long>  {
     """)
     List<Quote> findAllByOrderByAuthor(Pageable pageable) throws QuoteNotFoundException;
 
-    @Query("""
-        SELECT q FROM Quote q
-        WHERE q.id = :id
-    """)
-    Quote findById(@Param("id") long id);
-
-    Quote save(@Validated Quote entity);
-
 }

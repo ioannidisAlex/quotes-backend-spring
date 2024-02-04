@@ -27,16 +27,26 @@ public class QuoteService {
             return repository.findAllByOrderByAuthor(PageRequest.of(paginationDTO.getPage(), paginationDTO.getPageSize()))
                     .stream().map(entity -> new QuoteDTO(entity.getId(), entity.getAuthor(), entity.getText()))
                     .collect(Collectors.toList());
+            LOGGER.info("Successfully retrieved {} quotes for page {} and pageSize {}", responseQuotesDTO.size(), paginationDTO.getPage(), paginationDTO.getPageSize());
+            return  responseQuotesDTO;
         } catch (QuoteNotFoundException e) {
             throw new QuoteServiceException("An error occurred in QuoteService", e);
         }
     }
 
     public QuoteDTO getRandomQuote() {
-        Random random = new Random();
-        long Id = random.nextInt((int) repository.count()) + 1;
-        Quote quote =  repository.findById(Id);
-        return new QuoteDTO(quote.getId(), quote.getAuthor(), quote.getText());
+        if (repository.count() > 0) {
+            Random random = new Random();
+            Optional<Quote> quoteOpt;
+            do {
+                long Id = random.nextInt((int) repository.count()) + 1;
+                quoteOpt = repository.findById(Id);
+            } while (quoteOpt.isEmpty());
+            return new QuoteDTO(quoteOpt.get().getId(), quoteOpt.get().getAuthor(), quoteOpt.get().getText());
+        } else {
+            LOGGER.warn("Empty database");
+            return null;
+        }
     }
 
     public QuoteDTO findById(long id) {
@@ -59,19 +69,15 @@ public class QuoteService {
         return updateEntity(quote, quoteDTO);
     }
 
-    //to bechecked
     public QuoteDTO create(QuoteDTO quoteDTO) {
         return updateEntity(new Quote(), quoteDTO);
     }
 
-    //to bechecked
     private QuoteDTO updateEntity(Quote quote, QuoteDTO quoteDTO) {
         quote.setText(quoteDTO.getText());
         quote.setAuthor(quoteDTO.getAuthor());
         quote = repository.save(quote);
-        // icould/should recreate the quoteDTO and return it right?
         quoteDTO.setId(quote.getId());
-        //
         return quoteDTO;
     }
 
